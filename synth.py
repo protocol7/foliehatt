@@ -28,7 +28,7 @@ def pd_receive(*s):
   if s[0] == 'onesec':
     fft = array.array('f', [0.0] * 64)
     libpd_read_array(fft, 'fft_array', 0, 64)
-    print("\t".join([str(a) for a in fft[0:40]]))
+    print(" ".join([str(a) for a in fft[0:40]]))
 
 #libpd_set_print_callback(pd_receive)
 libpd_set_bang_callback(pd_receive)

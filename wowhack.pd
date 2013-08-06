@@ -15,7 +15,7 @@
 #X msg 435 38 32;
 #X msg 516 164 64;
 #X msg 434 204 0.2;
-#X obj 567 456 metro 1000;
+#X obj 567 456 metro 50;
 #X obj 128 243 phasor~ 880;
 #X obj 175 294 +~;
 #X msg 243 98 0.41;
