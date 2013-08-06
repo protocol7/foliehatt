@@ -18,13 +18,13 @@ int main() {
 	while(true) {
 		for(int x=0; x < histogramWidth; x++) {
 			float f = (float) rand() / (float) RAND_MAX;
-			rawHistogram[x] = rawHistogram[x] + (1 - f * 2) * 0.01;
+			rawHistogram[x] = std::max(0.0d, std::min(1.0d, rawHistogram[x] + (1 - f * 2) * 0.01));
 			printf("%f ", rawHistogram[x] * fabs((float)sin(sinI)));
 		}
 		printf("\n");
 		sinI += 0.01;
 		//sinI = ((int)(1000*sinI) % 3140)/1000.0f;
-		usleep(1000);
+		usleep(10000);
 	}
 	return 0;
 }
