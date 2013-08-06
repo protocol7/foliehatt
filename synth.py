@@ -23,11 +23,21 @@ stream = p.open(format = pyaudio.paInt16,
                 frames_per_buffer = fpb)
 
 m = PdManager(0, ch, sr, tpb)
+
+def pd_receive(*s):
+  print 'received:', s
+
+libpd_set_print_callback(pd_receive)
+libpd_set_float_callback(pd_receive)
+libpd_set_list_callback(pd_receive)
+libpd_set_symbol_callback(pd_receive)
+libpd_set_noteon_callback(pd_receive)
+
+libpd_subscribe('real')
+libpd_subscribe('complex')
+
 #libpd_open_patch('../libpd/python/bloopy.pd')
 libpd_open_patch('wowhack.pd')
-
-libpd_float('pitch', 40)
-libpd_float('volume', 127)
 
 while stream.is_active():
     ready = select.select([sys.stdin], [], [], 0)[0]
