@@ -1,0 +1,1 @@
+make && ./producer.o | ./main.o
