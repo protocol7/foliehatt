@@ -25,4 +25,5 @@ while True:
         signals.append(wifi_stats(interface)[1])
 
     print("\t".join([str(i) for i in signals]))
+    sys.stdout.flush()
     time.sleep(0.5)
