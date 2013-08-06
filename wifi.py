@@ -24,6 +24,9 @@ while True:
     for interface in interfaces:
         signals.append(wifi_stats(interface)[1])
 
+    # transform to increase span
+    signals = [int(i * i / 100) for i in signals]
+
     print("\t".join([str(i) for i in signals]))
     sys.stdout.flush()
     time.sleep(0.5)
