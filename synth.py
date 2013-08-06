@@ -11,7 +11,7 @@ p = pyaudio.PyAudio()
 
 ch = 1
 sr = 48000
-tpb = 64
+tpb = 16
 bs = libpd_blocksize()
 
 fpb =  bs * tpb
@@ -20,7 +20,7 @@ stream = p.open(format = pyaudio.paInt16,
                 channels = ch,
                 rate = sr,
                 output = True,
-                frames_per_buffer = 48000)
+                frames_per_buffer = fpb)
 
 m = PdManager(0, ch, sr, tpb)
 #libpd_open_patch('../libpd/python/bloopy.pd')
