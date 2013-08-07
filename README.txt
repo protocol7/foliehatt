@@ -1,4 +1,4 @@
-Wifi thermin
+Wifi theremin
 
 This was our hack at wowhack2 where we wanted to build a Wifi theremin running
 on Raspberry Pi. Basically, we wanted to make a musical instrument similar to a
