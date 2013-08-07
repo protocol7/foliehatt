@@ -1,28 +1,46 @@
 # -*- coding: utf-8 -*-
 
-import pyaudio
 import wave
 import sys
 from pylibpd import *
 import array
 import select
 
-p = pyaudio.PyAudio()
+import alsaaudio
+import pyaudio
+
+class AudioPyAudio(object):
+  def __init__(self, samplerate, channels, frames_per_buffer):
+    self.p = pyaudio.PyAudio()
+    self.stream = self.p.open(format = pyaudio.paInt16,
+                              channels = channels,
+                              rate = samplerate,
+                              output = True,
+                              frames_per_buffer = frames_per_buffer)
+
+  def write(self, buf, frames):
+    self.stream.write(buf, frames)
+
+class AudioAlsa(object):
+  def __init__(self, samplerate, channels, frames_per_buffer):
+    self.device = alsaaudio.PCM(card='default')
+    self.device.setchannels(channels)
+    self.device.setrate(samplerate)
+
+  def write(self, buf, frames):
+    self.device.write(buf.tostring())
 
 ch = 1
-sr = 11025
-tpb = 16
+sr = 44100 #11025
+tpb = 8
 bs = libpd_blocksize()
 
 fpb =  bs * tpb
 
-stream = p.open(format = pyaudio.paInt16,
-                channels = ch,
-                rate = sr,
-                output = True,
-                frames_per_buffer = fpb)
-
 m = PdManager(0, ch, sr, tpb)
+
+#audio = AudioPyAudio(sr, ch, fpb)
+audio = AudioAlsa(sr, ch, fpb)
 
 def pd_receive(*s):
   if s[0] == 'onesec':
@@ -43,7 +61,7 @@ libpd_subscribe('onesec')
 #libpd_open_patch('../libpd/python/bloopy.pd')
 libpd_open_patch('wowhack.pd')
 
-while stream.is_active():
+while True:
     ready = select.select([sys.stdin], [], [], 0)[0]
     if ready:
         line = sys.stdin.readline()
@@ -60,7 +78,7 @@ while stream.is_active():
         inbuf = array.array('h', '\x00\x00' * fpb)
         outbuf = array.array('h', '\x00\xff' * fpb)
         libpd_process_short(tpb, inbuf, outbuf)
-        stream.write(outbuf, len(outbuf))
+        audio.write(outbuf, len(outbuf))
 
 stream.close()
 p.terminate()
