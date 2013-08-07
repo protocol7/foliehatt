@@ -44,3 +44,12 @@ Get two wlan interfaces running
 To restart the wlans
 * sudo wpa_action wlan0 stop ; sudo wpa_action wlan0 reload ; sudo ifup -v wlan0
 * sudo wpa_action wlan1 stop ; sudo wpa_action wlan1 reload ; sudo ifup -v wlan1
+
+The audio parts are done with the world's ugliest puredata patch, that we then run
+using the python bindings for libpd. The patch takes two parameters, produces some
+weird sound, and calculates an fft of it. The python script takes parameters from
+stdin, and sends them to the pd patch, then grabs the fft array and prints it on
+stdout. The audio output uses either PyAudio or alsaaudio. For some reason, PyAudio
+is very clicky on the RPi so we use alsaaudio instead.
+
+The third part is an ncurses visualizer for the fft, and this part is done in C++.
