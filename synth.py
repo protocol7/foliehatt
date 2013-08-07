@@ -6,7 +6,11 @@ from pylibpd import *
 import array
 import select
 
-import alsaaudio
+try:
+  import alsaaudio
+except ImportError:
+  alsaaudio = None
+
 import pyaudio
 
 class AudioPyAudio(object):
@@ -39,8 +43,10 @@ fpb =  bs * tpb
 
 m = PdManager(0, ch, sr, tpb)
 
-#audio = AudioPyAudio(sr, ch, fpb)
-audio = AudioAlsa(sr, ch, fpb)
+if alsaaudio is not None:
+  audio = AudioAlsa(sr, ch, fpb)
+else:
+  audio = AudioPyAudio(sr, ch, fpb)
 
 def pd_receive(*s):
   if s[0] == 'onesec':
@@ -59,7 +65,7 @@ libpd_set_noteon_callback(pd_receive)
 libpd_subscribe('onesec')
 
 #libpd_open_patch('../libpd/python/bloopy.pd')
-libpd_open_patch('wowhack.pd')
+libpd_open_patch('wowhack2.pd')
 
 while True:
     ready = select.select([sys.stdin], [], [], 0)[0]
